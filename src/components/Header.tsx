@@ -19,7 +19,7 @@ export function Header({ settings }: HeaderProps) {
               href="/"
               className="text-sm sm:text-base font-semibold tracking-[0.16em] text-ui-fg-base hover:text-black uppercase transition-colors"
             >
-              {settings.title}
+              Tienda de Gonza
             </Link>
             <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-soft bg-ui-bg-subtle text-ui-fg-muted border border-ui-border-base">
               Córdoba
@@ -36,9 +36,10 @@ export function Header({ settings }: HeaderProps) {
               href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent('¡Hola Gonza! Vi tus productos en la web y quería consultarte.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="h-9 px-4 rounded-rounded bg-ui-fg-base hover:bg-black text-white text-small-semi flex items-center justify-center transition-colors shadow-sm"
+              className="h-9 px-3 sm:px-4 rounded-rounded bg-ui-fg-base hover:bg-black text-white text-small-semi flex items-center justify-center transition-colors shadow-sm"
             >
-              Contacto directo
+              <span className="sm:hidden">Contactar</span>
+              <span className="hidden sm:inline">Contacto directo</span>
             </a>
           </div>
         </nav>

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { getProductBySlug, getSiteSettings } from '@/sanity/client'
+import { getProductBySlug, getProducts, getSiteSettings } from '@/sanity/client'
 import { ProductGallery } from '@/components/ProductGallery'
 import { StatusBadge } from '@/components/StatusBadge'
 import { buildWhatsAppLink } from '@/lib/whatsapp'
@@ -25,6 +25,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     title: `${product.title} - ${formattedPrice}`,
     description: product.description || product.title,
   }
+}
+
+export async function generateStaticParams() {
+  const products = await getProducts()
+  return products.map((product) => ({
+    slug: product.slug.current,
+  }))
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {

@@ -1,4 +1,4 @@
-import { createClient } from 'next-sanity'
+import { createClient } from '@sanity/client'
 import { Product, SiteSettings } from '@/types'
 import { defaultSiteSettings, mockProducts } from '@/data/mockProducts'
 

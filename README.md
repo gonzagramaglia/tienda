@@ -26,12 +26,26 @@ Create a `.env.local` file with:
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_WHATSAPP_NUMBER=5493515490431
-NEXT_PUBLIC_STORE_TITLE="Venta Personal de Gonza"
+NEXT_PUBLIC_STORE_TITLE="Tienda Personal de Gonza"
 ```
+
+For detailed instructions on creating a free Sanity project, setting CORS, and managing items, see [SANITY_SETUP.md](./SANITY_SETUP.md).
 
 ## Tech Stack
 
-- **Next.js 15** (App Router)
+- **Next.js 15** (App Router, Static Export)
 - **React 19**
 - **Tailwind CSS**
 - **Sanity Studio v3**
+
+## Deployment to GitHub Pages
+
+This storefront is configured for automated static export and deployment via GitHub Actions:
+
+1. In your GitHub repository, navigate to **Settings** > **Pages**.
+2. Under **Build and deployment** > **Source**, select **GitHub Actions**.
+3. (Optional) Add your repository secrets under **Settings** > **Secrets and variables** > **Actions**:
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
+   - `NEXT_PUBLIC_SANITY_DATASET`
+   - `NEXT_PUBLIC_WHATSAPP_NUMBER`
+4. Every push to the `main` branch triggers `.github/workflows/deploy.yml` and publishes the site.

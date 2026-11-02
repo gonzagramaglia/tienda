@@ -75,26 +75,6 @@ export const productType = defineType({
       },
     }),
     defineField({
-      name: 'category',
-      title: 'Categoría',
-      type: 'string',
-      initialValue: 'Tecnología',
-      options: {
-        list: [
-          'Tecnología y Computación',
-          'Celulares y Accesorios',
-          'Consolas y Videojuegos',
-          'Audio, Foto y Video',
-          'Muebles y Hogar',
-          'Herramientas y Construcción',
-          'Deportes y Bicicletas',
-          'Indumentaria y Calzado',
-          'Instrumentos Musicales',
-          'Otros',
-        ],
-      },
-    }),
-    defineField({
       name: 'images',
       title: 'Fotos del producto',
       type: 'array',
@@ -133,7 +113,8 @@ export const productType = defineType({
       name: 'whatsappCustomMessage',
       title: 'Mensaje personalizado para WhatsApp',
       type: 'string',
-      description: 'Opcional. Por defecto enviará: "Hola! Me interesa coordinar la compra de [Nombre del producto]"',
+      placeholder: 'Ej: Hola! Me interesa la tablet lenovo M11 que vendés en tu tienda',
+      description: 'Opcional. Por ejemplo: "Hola! Me interesa la tablet lenovo M11 que vendés en tu tienda"',
     }),
     defineField({
       name: 'featured',

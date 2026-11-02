@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { Product } from '@/types'
+import { getProducts, isSanityConfigured } from '@/sanity/client'
 import { ProductCard } from './ProductCard'
 
 interface CatalogViewProps {
@@ -9,11 +10,22 @@ interface CatalogViewProps {
   whatsappNumber: string
 }
 
-export function CatalogView({ products, whatsappNumber }: CatalogViewProps) {
+export function CatalogView({ products: initialProducts, whatsappNumber }: CatalogViewProps) {
+  const [products, setProducts] = useState<Product[]>(initialProducts)
   const [search, setSearch] = useState('')
   // Por defecto sólo muestra productos disponibles
   const [selectedStatus, setSelectedStatus] = useState<'disponible' | 'vendidos_reservados'>('disponible')
   const searchInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isSanityConfigured) {
+      getProducts().then((live) => {
+        if (live && live.length > 0) {
+          setProducts(live)
+        }
+      })
+    }
+  }, [])
 
   const counts = useMemo(() => {
     const disponibles = products.filter((p) => p.status === 'disponible').length

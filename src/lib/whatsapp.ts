@@ -23,7 +23,7 @@ export function buildWhatsAppLink({
     ? ` (${currency === 'USD' ? 'US$' : '$'} ${new Intl.NumberFormat('es-AR').format(price)})`
     : ''
 
-  const message = `¡Hola Gonza! Te escribo desde tu catálogo web. Me interesa coordinar la compra de *${productTitle}*${priceText}. ¿Sigue disponible?`
+  const message = `Hola! Me interesa *${productTitle}* que vendés en tu tienda`
 
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`
 }

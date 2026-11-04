@@ -9,14 +9,22 @@ import { urlForImage } from '@/sanity/image'
 interface ProductCardProps {
   product: Product
   whatsappNumber: string
+  onSelect?: (product: Product) => void
 }
 
-export function ProductCard({ product, whatsappNumber }: ProductCardProps) {
+export function ProductCard({ product, whatsappNumber, onSelect }: ProductCardProps) {
   const isSold = product.status === 'vendido'
   const coverImage = product.images?.[0]
   const imageUrl = coverImage ? urlForImage(coverImage) : '/placeholder.svg'
 
   const formattedPrice = `${product.currency === 'USD' ? 'US$' : '$'} ${new Intl.NumberFormat('es-AR').format(product.price)}`
+
+  const handleSelect = (e: React.MouseEvent) => {
+    if (onSelect) {
+      e.preventDefault()
+      onSelect(product)
+    }
+  }
 
   const whatsappUrl = buildWhatsAppLink({
     phoneNumber: whatsappNumber,
@@ -36,7 +44,8 @@ export function ProductCard({ product, whatsappNumber }: ProductCardProps) {
       {/* Imagen */}
       <Link
         href={`/producto/${product.slug.current}`}
-        className="relative w-full overflow-hidden bg-ui-bg-subtle border border-ui-border-base rounded-large aspect-[1/1] sm:aspect-[11/14] block"
+        onClick={handleSelect}
+        className="relative w-full overflow-hidden bg-ui-bg-subtle border border-ui-border-base rounded-large aspect-[1/1] sm:aspect-[11/14] block cursor-pointer"
       >
         <Image
           src={imageUrl}
@@ -54,7 +63,8 @@ export function ProductCard({ product, whatsappNumber }: ProductCardProps) {
       <div className="flex items-baseline justify-between gap-x-2 mt-3">
         <Link
           href={`/producto/${product.slug.current}`}
-          className="text-ui-fg-base text-sm font-normal line-clamp-1 hover:opacity-75 transition-opacity"
+          onClick={handleSelect}
+          className="text-ui-fg-base text-sm font-normal line-clamp-1 hover:opacity-75 transition-opacity cursor-pointer"
         >
           {product.title}
         </Link>

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { Product } from '@/types'
 import { getProducts, isSanityConfigured } from '@/sanity/client'
 import { ProductCard } from './ProductCard'
+import { ProductModal } from './ProductModal'
 
 interface CatalogViewProps {
   products: Product[]
@@ -12,20 +13,81 @@ interface CatalogViewProps {
 
 export function CatalogView({ products: initialProducts, whatsappNumber }: CatalogViewProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [search, setSearch] = useState('')
   // Por defecto sólo muestra productos disponibles
   const [selectedStatus, setSelectedStatus] = useState<'disponible' | 'vendidos_reservados'>('disponible')
   const searchInputRef = useRef<HTMLInputElement>(null)
 
+  // Abrir modal y actualizar URL
+  const handleSelectProduct = useCallback((product: Product) => {
+    setSelectedProduct(product)
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      url.searchParams.set('producto', product.slug.current)
+      window.history.pushState({ slug: product.slug.current }, '', url.toString())
+    }
+  }, [])
+
+  // Cerrar modal y limpiar URL
+  const handleCloseModal = useCallback(() => {
+    setSelectedProduct(null)
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      if (url.searchParams.has('producto')) {
+        url.searchParams.delete('producto')
+        window.history.pushState(null, '', url.toString())
+      }
+    }
+  }, [])
+
+  // Soporte para botón atrás/adelante del navegador
+  useEffect(() => {
+    const handlePopState = () => {
+      const url = new URL(window.location.href)
+      const slug = url.searchParams.get('producto')
+      if (slug) {
+        const found = products.find((p) => p.slug.current === slug)
+        if (found) setSelectedProduct(found)
+      } else {
+        setSelectedProduct(null)
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [products])
+
+  // Carga en vivo desde Sanity y chequeo de URL inicial (?producto=slug)
   useEffect(() => {
     if (isSanityConfigured) {
       getProducts().then((live) => {
         if (live && live.length > 0) {
           setProducts(live)
+
+          // Si había un ?producto en la URL al cargar
+          if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href)
+            const slug = url.searchParams.get('producto')
+            if (slug) {
+              const found = live.find((p) => p.slug.current === slug)
+              if (found) setSelectedProduct(found)
+            }
+          }
         }
       })
+    } else {
+      // Si estamos con mockProducts
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const slug = url.searchParams.get('producto')
+        if (slug) {
+          const found = initialProducts.find((p) => p.slug.current === slug)
+          if (found) setSelectedProduct(found)
+        }
+      }
     }
-  }, [])
+  }, [initialProducts])
 
   const counts = useMemo(() => {
     const disponibles = products.filter((p) => p.status === 'disponible').length
@@ -147,6 +209,7 @@ export function CatalogView({ products: initialProducts, whatsappNumber }: Catal
               <ProductCard
                 product={product}
                 whatsappNumber={whatsappNumber}
+                onSelect={handleSelectProduct}
               />
             </li>
           ))}
@@ -170,6 +233,13 @@ export function CatalogView({ products: initialProducts, whatsappNumber }: Catal
           </button>
         </div>
       )}
+
+      {/* Modal con detalle del producto */}
+      <ProductModal
+        product={selectedProduct}
+        whatsappNumber={whatsappNumber}
+        onClose={handleCloseModal}
+      />
     </div>
   )
 }

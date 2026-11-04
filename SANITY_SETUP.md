@@ -111,13 +111,37 @@ The storefront comes with an embedded **Sanity Studio v3** reachable directly vi
 
 ---
 
-## 5. Publishing Changes to GitHub Pages
+## 5. Automatic Deployments with Sanity Webhook (Recommended)
 
-Since GitHub Pages serves pre-rendered static HTML files:
+To have GitHub Pages automatically rebuild every time you publish, edit, or delete an item in Sanity Studio:
 
-1. **Locally**: Content changes in Sanity reflect immediately on page reload.
-2. **On GitHub Pages**: To update the public site with newly added products or updated prices:
-   - Go to the **Actions** tab in your GitHub repository.
-   - Select the **Deploy to GitHub Pages** workflow.
-   - Click **Run workflow** > **Branch: main** > **Run workflow**.
-   *(Or push any commit to `main` to trigger the build automatically).*
+### 1. Create a GitHub Personal Access Token (PAT)
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens?type=beta) (or **GitHub Settings** > **Developer Settings** > **Personal access tokens** > **Tokens (classic)**).
+2. Click **Generate new token (classic)**.
+3. Name it `Sanity Webhook Deploy`.
+4. Select the **`repo`** scope (Full control of private repositories).
+5. Click **Generate token** and copy the generated token (e.g. `ghp_xxxxxxxxxxxx`).
+
+### 2. Add the Webhook in Sanity
+1. Go to [sanity.io/manage](https://www.sanity.io/manage) and open your project.
+2. Navigate to **API** > **Webhooks** > **Create webhook**.
+3. Configure the fields:
+   - **Name**: `GitHub Pages Deploy`
+   - **URL**: `https://api.github.com/repos/gonzagramaglia/tienda/dispatches`
+   - **Dataset**: `production`
+   - **Trigger on**: Check **Create**, **Update**, and **Delete**.
+   - **Filter**: `_type in ["product", "siteSettings"]`
+   - **HTTP method**: `POST`
+   - **HTTP Headers**: Add these 3 headers:
+     - `Authorization`: `Bearer ghp_tu_token_de_github_aca` *(replace with your token)*
+     - `Accept`: `application/vnd.github.v3+json`
+     - `User-Agent`: `Sanity-Webhook`
+   - **Payload**: Select **Custom** and enter:
+     ```json
+     {
+       "event_type": "sanity-deploy"
+     }
+     ```
+4. Click **Save**.
+
+Now, every time you click **Publish** in Sanity Studio, Sanity automatically tells GitHub Actions to rebuild and deploy the new product pages to GitHub Pages!

@@ -14,14 +14,14 @@ export function Header({ settings }: HeaderProps) {
       <header className="relative h-16 mx-auto border-b duration-200 bg-white/95 backdrop-blur-md border-ui-border-base">
         <nav className="content-container flex items-center justify-between w-full h-full text-small-regular text-ui-fg-subtle">
           {/* Logo / Brand */}
-          <div className="flex items-center gap-x-4">
+          <div className="flex items-center gap-x-2 sm:gap-x-3">
             <Link
               href="/"
-              className="text-sm sm:text-base font-semibold tracking-[0.16em] text-ui-fg-base hover:text-black uppercase transition-colors"
+              className="text-xs sm:text-base font-semibold tracking-[0.14em] sm:tracking-[0.16em] text-ui-fg-base hover:text-black uppercase transition-colors whitespace-nowrap"
             >
               Tienda de Gonza
             </Link>
-            <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-soft bg-ui-bg-subtle text-ui-fg-muted border border-ui-border-base">
+            <span className="inline-block text-[10px] uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded-soft bg-ui-bg-subtle text-ui-fg-muted border border-ui-border-base whitespace-nowrap">
               Córdoba
             </span>
           </div>

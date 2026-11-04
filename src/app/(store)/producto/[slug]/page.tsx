@@ -62,12 +62,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   })
 
   return (
-    <div className="content-container py-8 sm:py-12">
+    <div className="content-container pt-3 sm:pt-4 pb-8 sm:pb-12">
       {/* Volver */}
-      <div className="mb-6">
+      <div className="mb-3 sm:mb-4">
         <Link
           href="/"
-          className="text-xs text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
+          className="text-xs text-ui-fg-subtle hover:text-ui-fg-base transition-colors inline-block py-1"
         >
           ← Volver
         </Link>
